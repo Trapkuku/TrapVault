@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Вход</h2>
+        <form action="{{ url_for('main.login') }}" method="post">
+            <div class="form-group">
+                <label for="username">Имя пользователя или Email:</label>
+                <input type="text" id="username" name="username" class="form-control" required placeholder="Введите имя пользователя или email">
+                <div class="invalid-feedback">Пожалуйста, введите имя пользователя или email.</div>
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" class="form-control" required minlength="8" placeholder="Введите пароль">
+                <div class="invalid-feedback">Пароль должен содержать не менее 8 символов.</div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Войти</button>
+        </form>
+        <p class="mt-3 text-center">Нет аккаунта? <a href="{{ url_for('main.register') }}">Зарегистрироваться</a></p>
+    </div>
+</body>
+</html>

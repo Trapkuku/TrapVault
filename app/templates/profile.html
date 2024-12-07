@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrapVault - Личный кабинет</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/black1whiteprofile.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="bg-primary text-white p-4 rounded shadow-sm text-center">
+                    <h4 class="mb-4"><a href="{{ url_for('main.profile') }}" class="text-white text-decoration-none" style="text-transform: uppercase; font-family: 'Brush Script MT', cursive;">TrapVault</a></h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" href="{{ url_for('main.profile') }}">Профиль</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" href="{{ url_for('main.view_folders') }}">Папки</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" href="{{ url_for('main.index') }}">На главную</a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-secondary w-100" onclick="toggleTheme()">Тёмная тема</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <!-- Информация о пользователе -->
+               <div class="card shadow-sm mb-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body text-center">
+                            <h2 class="text-center mb-4">Личный кабинет</h2>
+                            <div class="profile-avatar mb-3"
+                                 style="position: relative; width: 180px; height: 180px; margin: 0 auto; border: 3px solid #a0a0a0; overflow: hidden;">
+                                <form action="{{ url_for('main.upload_avatar') }}" method="post" enctype="multipart/form-data" id="avatarForm" style="position: relative; width:100%; height:100%;">
+                                    {% if current_user.avatar %}
+                                        <img src="{{ url_for('main.uploaded_file', filename=current_user.avatar) }}"
+                                             alt="Аватар профиля"
+                                             style="width: 100%; height: 100%; object-fit: cover;">
+                                    {% else %}
+                                        <div style="width: 100%; height: 100%; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 18px; color: #a0a0a0;">Аватар профиля</span>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Прозрачный label для клика по всей области -->
+                                    <label for="customAvatar"
+                                           style="cursor: pointer; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0);"></label>
+
+                                    <input type="file" name="avatar" id="customAvatar" style="display: none;" onchange="autoSubmitAvatarForm(event);">
+                                </form>
+                            </div>
+
+                            <!-- Информация о пользователе -->
+                            <div class="user-info mb-3">
+                                <p class="mb-1">Добро пожаловать, <strong>{{ username }}</strong>!</p>
+                                <p class="text-muted">Ваш email: {{ email }}</p>
+                            </div>
+
+                            {% if current_user.avatar %}
+                                <form action="{{ url_for('main.remove_avatar') }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Удалить аватар</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+                <!-- Загруженные файлы -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="mb-3">Последние загруженные файлы</h3>
+                        <ul class="list-group">
+                            {% for file in files %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center shadow-sm rounded">
+                                <span>{{ file.filename }}</span>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('main.download_file', file_id=file.id) }}" class="btn btn-outline-success btn-sm btn-custom">Скачать</a>
+                                    <button type="button" class="btn btn-outline-danger btn-sm btn-custom" onclick="openModal('{{ url_for('main.delete_file', file_id=file.id) }}')">Удалить</button>
+                                </div>
+                            </li>
+                            {% else %}
+                            <li class="list-group-item text-center text-muted">У вас нет загруженных файлов.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Загрузка нового файла -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="mb-3">Загрузить новый файл в папку</h3>
+                        <form action="{{ url_for('main.profile') }}" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <input type="file" name="file" class="custom-file-input" id="customFile" required>
+                                    <label class="custom-file-label" for="customFile">Выберите файл</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="folder_id">Выберите папку:</label>
+                                <select name="folder_id" id="folder_id" class="form-control selectpicker" data-live-search="true" style="transition: all 0.3s ease;">
+                                    <option value="" selected>Без папки</option>
+                                    {% for folder in folders|unique(attribute='id') %}
+                                        {% if folder.name.strip() != '' %}
+                                            <option value="{{ folder.id }}">{{ folder.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Загрузить файл</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Резервные копии -->
+                <!-- Резервные копии -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="mb-3">Резервные копии</h3>
+                        <a href="{{ url_for('main.create_backup') }}" class="btn btn-primary">Создать резервную копию</a>
+
+                        <h4 class="mt-4">Ваши резервные копии</h4>
+                        <ul class="list-group">
+                            {% for backup in current_user.backups %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ backup.backup_date.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                                <div class="btn-group">
+                                    <form action="{{ url_for('main.restore_backup', backup_id=backup.id) }}" method="post" style="margin-right: 5px;">
+                                        <button type="submit" class="btn btn-success btn-sm">Восстановить</button>
+                                    </form>
+                                    <form action="{{ url_for('main.delete_backup', backup_id=backup.id) }}" method="post">
+                                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                    </form>
+                                </div>
+                            </li>
+                            {% else %}
+                            <li class="list-group-item text-center text-muted">У вас нет созданных резервных копий.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+
+                <a href="{{ url_for('main.logout') }}" class="btn btn-outline-danger mt-4">Выйти</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal" style="display:none;">
+        <div class="modal-content" style="position: relative; width: 400px; max-width: 90%; padding: 20px; background-color: #fff; border-radius: 8px;">
+            <span class="close-button" onclick="closeModal()" style="position: absolute; top: 10px; right: 10px; font-size: 24px; cursor: pointer;">&times;</span>
+            <h3 style="text-align: center;">Удаление объекта</h3>
+
+            <!-- Изображение для предупреждения из интернета -->
+            <img src="https://i.scdn.co/image/ab67616d0000b273610290059a1b500404ca638f" alt="Предупреждение" style="width: 100%; height: auto; border-radius: 8px; margin-top: 10px;">
+
+            <p style="text-align: center; margin-top: 15px;">Вы уверены, что хотите удалить этот объект?</p>
+
+            <form id="deleteForm" method="post" style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-danger" style="margin-right: 10px;">Удалить</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Отмена</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно для восстановления -->
+    <div id="restoreModal" class="modal" style="display:none;">
+        <div class="modal-content" style="position: relative; width: 400px; max-width: 90%; padding: 20px; background-color: #fff; border-radius: 8px;">
+            <span class="close-button" onclick="closeRestoreModal()" style="position: absolute; top: 10px; right: 10px; font-size: 24px; cursor: pointer;">&times;</span>
+            <h3 style="text-align: center;">Восстановление резервной копии</h3>
+
+            <p style="text-align: center; margin-top: 15px;">Вы уверены, что хотите восстановить файлы из этой резервной копии?</p>
+
+            <form id="restoreForm" method="post" style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-success" style="margin-right: 10px;">Восстановить</button>
+                <button type="button" class="btn btn-secondary" onclick="closeRestoreModal()">Отмена</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно для удаления резервной копии -->
+    <div id="deleteBackupModal" class="modal" style="display:none;">
+        <div class="modal-content" style="position: relative; width: 400px; max-width: 90%; padding: 20px; background-color: #fff; border-radius: 8px;">
+            <span class="close-button" onclick="closeDeleteBackupModal()" style="position: absolute; top: 10px; right: 10px; font-size: 24px; cursor: pointer;">&times;</span>
+            <h3 style="text-align: center;">Удаление резервной копии</h3>
+
+            <!-- Ваше изображение -->
+            <div style="text-align: center; margin-top: 15px;">
+                <img src="https://cs11.pikabu.ru/post_img/big/2018/09/02/0/1535837301182499110.jpg"
+                     alt="Предупреждение"
+                     style="max-width:100%; height:auto; border-radius:8px;"/>
+            </div>
+
+            <p style="text-align: center; margin-top: 15px;">
+                Вы уверены, что хотите удалить эту резервную копию?
+            </p>
+
+            <form id="deleteBackupForm" method="post" style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-danger" style="margin-right: 10px;">Удалить</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteBackupModal()">Отмена</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+            $('.selectpicker').selectpicker();
+            loadTheme();
+        });
+
+        function autoSubmitAvatarForm(event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function () {
+                var dataURL = reader.result;
+                var avatarElement = document.querySelector('.profile-avatar img');
+                if (avatarElement) {
+                    avatarElement.src = dataURL;  // Меняем аватар на клиенте
+                } else {
+                    var placeholder = document.querySelector('.profile-avatar div');
+                    if (placeholder) {
+                        placeholder.outerHTML = '<img src="' + dataURL + '" alt="Аватар профиля" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; border: 3px solid #a0a0a0;">';
+                    }
+                }
+                document.getElementById('avatarForm').submit();  // Отправляем форму
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function toggleTheme() {
+            $('body').toggleClass('dark-theme');
+            const theme = $('body').hasClass('dark-theme') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        }
+
+        function loadTheme() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                $('body').addClass('dark-theme');
+            }
+        }
+
+        function openModal(deleteUrl) {
+            document.getElementById('deleteModal').style.display = 'block';
+            document.getElementById('deleteForm').setAttribute('action', deleteUrl);
+        }
+
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        function openRestoreModal(restoreUrl) {
+            document.getElementById('restoreModal').style.display = 'block';
+            document.getElementById('restoreForm').setAttribute('action', restoreUrl);
+        }
+
+        function closeRestoreModal() {
+            document.getElementById('restoreModal').style.display = 'none';
+        }
+
+        function openDeleteBackupModal(deleteUrl) {
+            document.getElementById('deleteBackupModal').style.display = 'block';
+            document.getElementById('deleteBackupForm').setAttribute('action', deleteUrl);
+        }
+
+        function closeDeleteBackupModal() {
+            document.getElementById('deleteBackupModal').style.display = 'none';
+        }
+
+    </script>
+
+</body>
+</html>

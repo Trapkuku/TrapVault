@@ -1,0 +1,35 @@
+: 20px;
+}
+
+header nav .navigation a {
+    text-decoration: none;
+    color: #333;
+}
+
+header nav .navigation a.active {
+    font-weight: bold;
+}
+
+.folders-container {
+    text-align: center;
+}
+
+.folder-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.folder-item {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.folder-item a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.folder-item a:hover {
+    text-decoration: underline;
+}

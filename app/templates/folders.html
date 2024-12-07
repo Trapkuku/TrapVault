@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ваши папки - TrapVault</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/black1whiteprofile.css') }}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-primary navbar-light">
+            <a class="navbar-brand" href="{{ url_for('main.profile') }}" style="text-transform: uppercase; font-family: 'Brush Script MT', cursive;">TrapVault</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.profile') }}">Профиль</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('main.view_folders') }}">Папки</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                            <a class="nav-link text-white" href="{{ url_for('main.index') }}">На главную</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-secondary" id="theme-toggle-btn" onclick="toggleTheme()">Сменить тему</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Ваши папки</h2>
+
+        <!-- Форма поиска папок -->
+        <form id="searchForm" class="mb-4">
+            <div class="input-group">
+                <input type="text" id="searchInput" name="query" class="form-control" placeholder="Поиск папок и файлов..." required>
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" onclick="searchFolders()">Поиск</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Секция создания новой папки -->
+        <div class="create-folder-section mb-4">
+            <h3>Создать новую папку</h3>
+            <form action="{{ url_for('main.view_folders') }}" method="post">
+                <div class="form-group">
+                    <input type="text" name="folder_name" class="form-control" placeholder="Введите имя новой папки" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Создать папку</button>
+            </form>
+        </div>
+
+        <!-- Список папок -->
+        <ul class="list-group" id="folderList">
+            {% for folder in folders %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('main.view_folder', folder_id=folder.id) }}">{{ folder.name }}</a>
+                    <form action="{{ url_for('main.delete_folder', folder_id=folder.id) }}" method="post" class="d-inline" onsubmit="return confirm('Вы уверены, что хотите удалить эту папку?');">
+                       <button type="button" class="btn btn-outline-danger btn-sm" onclick="openModal('{{ url_for('main.delete_folder', folder_id=folder.id) }}')">Удалить</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="list-group-item text-center text-muted">У вас нет созданных папок.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Модальное окно для подтверждения удаления -->
+    <div id="deleteModal" class="modal" style="display:none;">
+        <div class="modal-content" style="position: relative; width: 400px; max-width: 90%; padding: 20px; background-color: #fff; border-radius: 8px;">
+            <span class="close-button" onclick="closeModal()" style="position: absolute; top: 10px; right: 10px; font-size: 24px; cursor: pointer;">&times;</span>
+            <h3 style="text-align: center;">Удаление объекта</h3>
+            <img src="https://i.scdn.co/image/ab67616d0000b273610290059a1b500404ca638f" alt="Предупреждение" style="width: 100%; height: auto; border-radius: 8px; margin-top: 10px;">
+            <p style="text-align: center; margin-top: 15px;">Вы уверены, что хотите удалить этот объект?</p>
+            <form id="deleteForm" method="post" style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-danger" style="margin-right: 10px;">Удалить</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Отмена</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript для поиска папок и файлов -->
+    <script>
+        $(document).ready(function () {
+            $('#searchInput').on('input', function () {
+                searchFolders();
+            });
+            loadTheme();
+        });
+
+        function searchFolders() {
+            let query = $('#searchInput').val().toLowerCase();
+            $.ajax({
+                url: "{{ url_for('main.search_folders') }}",
+                method: "GET",
+                data: { query: query },
+                success: function (data) {
+                    let folderList = $('#folderList');
+                    folderList.empty();
+                    if (data.folders.length === 0 && data.files.length === 0) {
+                        folderList.append('<li class="list-group-item text-center text-muted">Ничего не найдено.</li>');
+                    } else {
+                        data.folders.forEach(function (folder) {
+                            folderList.append(`
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a href="${folder.url}">${folder.name}</a>
+                                    <form action="${folder.delete_url}" method="post" class="d-inline" onsubmit="return confirm('Вы уверены, что хотите удалить эту папку?');">
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="openModal('${folder.delete_url}')">Удалить</button>
+                                    </form>
+                                </li>
+                            `);
+                        });
+                        data.files.forEach(function (file) {
+                            folderList.append(`
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>${file.filename} (в папке: ${file.folder_name})</span>
+                                    <a href="${file.download_url}" class="btn btn-outline-success btn-sm">Скачать</a>
+                                </li>
+                            `);
+                        });
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при выполнении поиска.');
+                }
+            });
+        }
+
+        function openModal(deleteUrl) {
+            document.getElementById('deleteModal').style.display = 'block';
+            document.getElementById('deleteForm').setAttribute('action', deleteUrl);
+        }
+
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        function toggleTheme() {
+            $('body').toggleClass('dark-theme');
+            $('.navbar').toggleClass('dark-theme');
+            const theme = $('body').hasClass('dark-theme') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+            $('#theme-toggle-btn').text(theme === 'dark' ? 'Светлая тема' : 'Тёмная тема');
+        }
+
+        function loadTheme() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                $('body').addClass('dark-theme');
+                $('.navbar').addClass('dark-theme');
+                $('#theme-toggle-btn').text('Светлая тема');
+            }
+        }
+    </script>
+</body>
+</html>

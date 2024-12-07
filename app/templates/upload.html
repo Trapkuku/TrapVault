@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузка файла</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Загрузка файла</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Выберите файл для загрузки:</label>
+                <input type="file" id="file" name="file" required>
+            </div>
+            <button type="submit">Загрузить</button>
+        </form>
+        <a href="/profile">Вернуться в личный кабинет</a>
+    </div>
+</body>
+</html>

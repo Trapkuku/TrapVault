@@ -1,0 +1,176 @@
+body {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Стили для тёмной темы */
+        body.dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Боковое меню */
+        .bg-primary {
+            background-color: #007bff !important;
+            transition: background-color 0.3s ease;
+        }
+
+        body.dark-theme .bg-primary {
+            background-color: #1f1f1f !important;
+        }
+
+        /* Текстовые цвета */
+        .text-white {
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .text-white {
+            color: #e0e0e0 !important;
+        }
+
+        /* Ссылки в боковом меню */
+        .nav-link {
+            color: #ffffff;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .nav-link {
+            color: #e0e0e0;
+        }
+
+        /* Карточки */
+        .card {
+            background-color: #ffffff;
+            color: #000000;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme .card {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+        }
+
+        /* Кнопки */
+        .btn {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        body.dark-theme .btn-primary {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: #ffffff;
+        }
+
+        body.dark-theme .btn-secondary {
+            background-color: #5a6268;
+            border-color: #5a6268;
+            color: #ffffff;
+        }
+
+        .btn-outline-danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        body.dark-theme .btn-outline-danger {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+
+        /* Поля формы */
+        .form-control {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #ced4da;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme .form-control {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+            border-color: #444444;
+        }
+
+        /* Выбор файла */
+        .custom-file-label {
+            background-color: #ffffff;
+            color: #6c757d;
+        }
+
+        body.dark-theme .custom-file-label {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+        }
+
+        /* Стили для списка файлов */
+        .list-group-item {
+            background-color: #ffffff;
+            color: #000000;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme .list-group-item {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+        }
+
+        /* Стиль для аватара */
+        .profile-avatar img {
+            border: 3px solid #a0a0a0;
+        }
+
+        body.dark-theme .profile-avatar img {
+            border: 3px solid #444444;
+        }
+
+        /* Стили для selectpicker */
+        .bootstrap-select .dropdown-toggle {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        body.dark-theme .bootstrap-select .dropdown-toggle {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+        }
+
+        /* Стили для select options */
+        .dropdown-menu.show {
+            background-color: #ffffff;
+        }
+
+        body.dark-theme .dropdown-menu.show {
+            background-color: #2c2c2c;
+        }
+
+        /* Модальное окно */
+        .modal-content {
+            background-color: #ffffff;
+            color: #000000;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme .modal-content {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+        }
+
+        /* Кнопка закрытия модального окна */
+        .close-button {
+            color: #000000;
+        }
+
+        body.dark-theme .close-button {
+            color: #e0e0e0;
+        }

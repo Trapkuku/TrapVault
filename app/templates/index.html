@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница - TrapVault</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/black1white.css') }}">
+    <!-- Подключение Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Подключение Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Ваши стили -->
+</head>
+<body>
+    <!-- Навигационное меню -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">TrapVault</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if not current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary mr-2" href="{{ url_for('main.register') }}">Регистрация</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary" href="{{ url_for('main.login') }}">Вход</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.profile') }}">Личный кабинет</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-danger" href="{{ url_for('main.logout') }}">Выход</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <button id="themeToggleButton" class="btn btn-secondary ml-3" onclick="toggleTheme()">Тёмная тема</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Приветственный баннер -->
+    <header class="jumbotron jumbotron-fluid text-center text-white">
+        <div class="container">
+            <h1 class="display-4 font-weight-bold">Добро пожаловать на TrapVault!</h1>
+            <p class="lead">Ваш надежный помощник для хранения и управления вашими файлами и данными.</p>
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('main.register') }}" class="btn btn-primary btn-lg mx-2">Зарегистрироваться</a>
+                <a href="{{ url_for('main.login') }}" class="btn btn-outline-light btn-lg mx-2">Войти</a>
+            {% else %}
+                <a href="{{ url_for('main.profile') }}" class="btn btn-primary btn-lg mx-2">Перейти в Личный кабинет</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Основные функции сайта -->
+    <section class="container my-5">
+        <div class="row text-center">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <div class="icon mb-3">
+                            <i class="fas fa-shield-alt fa-3x"></i>
+                        </div>
+                        <h5 class="card-title">Безопасное хранение данных</h5>
+                        <p class="card-text">Загружайте и храните свои файлы в одном месте, доступном в любое время и с любого устройства.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <div class="icon mb-3">
+                            <i class="fas fa-folder-open fa-3x"></i>
+                        </div>
+                        <h5 class="card-title">Удобное управление</h5>
+                        <p class="card-text">Организуйте ваши файлы с помощью папок и тегов для удобного доступа.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <div class="icon mb-3">
+                            <i class="fas fa-users fa-3x"></i>
+                        </div>
+                        <h5 class="card-title">Доступ для всей команды</h5>
+                        <p class="card-text">Делитесь доступом с вашей командой и совместно работайте над проектами.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел "О нас" -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="text-dark">О TrapVault</h2>
+                    <p>TrapVault — это удобное решение для хранения файлов, предназначенное для работы в команде и индивидуальных пользователей. Мы предлагаем высокую степень безопасности и удобный интерфейс, чтобы сделать управление вашими данными легким и доступным.</p>
+                    <a href="{{ url_for('main.register') }}" class="btn btn-outline-primary mt-3">Узнать больше</a>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img src="{{ url_for('static', filename='images/about_us.jpg') }}" alt="О нас" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Часто задаваемые вопросы (FAQ) -->
+    <section class="container my-5">
+        <h3 class="mb-4 text-center">Часто задаваемые вопросы</h3>
+        <div class="accordion" id="faqAccordion">
+            <div class="card">
+                <div class="card-header" id="faqOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link text-left w-100" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Как зарегистрироваться на сайте?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="collapse show" aria-labelledby="faqOne" data-parent="#faqAccordion">
+                    <div class="card-body">
+                        Перейдите на страницу регистрации, заполните форму, подтвердите ваш email, и вы сможете начать пользоваться сайтом.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="faqTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed text-left w-100" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Могу ли я делиться файлами с другими пользователями?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="faqTwo" data-parent="#faqAccordion">
+                    <div class="card-body">
+                        Да, вы можете предоставлять доступ к своим папкам другим пользователям или членам команды.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="text-white text-center py-4">
+        <div class="container">
+            <p>© 2024 TrapVault. Все права защищены.</p>
+            <div class="social-links">
+                <a href="#" class="text-white mx-2"><i class="fab fa-facebook fa-lg"></i></a>
+                <a href="#" class="text-white mx-2"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" class="text-white mx-2"><i class="fab fa-instagram fa-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Подключение JavaScript файлов -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Подключение Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Подключение Font Awesome JS -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Ваш скрипт для переключения темы -->
+    <script>
+        $(document).ready(function () {
+            loadTheme();
+        });
+
+        function toggleTheme() {
+            $('body').toggleClass('dark-theme');
+            $('.navbar').toggleClass('dark-theme');
+            const theme = $('body').hasClass('dark-theme') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+            $('#themeToggleButton').text(theme === 'dark' ? 'Светлая тема' : 'Тёмная тема');
+        }
+
+        function loadTheme() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                $('body').addClass('dark-theme');
+                $('.navbar').addClass('dark-theme');
+                $('#themeToggleButton').text('Светлая тема');
+            }
+        }
+    </script>
+</body>
+</html>

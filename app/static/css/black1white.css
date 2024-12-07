@@ -1,0 +1,196 @@
+ /* Основные стили */
+        body {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Стили для тёмной темы */
+        body.dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Навигационная панель */
+        .navbar {
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar.dark-theme {
+            background-color: #1f1f1f !important;
+        }
+
+        .navbar .nav-link,
+        .navbar .navbar-brand {
+            color: #000000;
+            transition: color 0.3s ease;
+        }
+
+        .navbar.dark-theme .nav-link,
+        .navbar.dark-theme .navbar-brand {
+            color: #ffffff;
+        }
+
+        /* Кнопки в навигации */
+        .navbar .btn {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .navbar.dark-theme .btn-outline-primary {
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        .navbar.dark-theme .btn-outline-primary:hover {
+            background-color: #ffffff;
+            color: #121212;
+            border-color: #ffffff;
+        }
+
+        .navbar.dark-theme .btn-primary {
+            background-color: #ffffff;
+            color: #121212;
+            border-color: #ffffff;
+        }
+
+        .navbar.dark-theme .btn-primary:hover {
+            background-color: #e0e0e0;
+            color: #121212;
+            border-color: #e0e0e0;
+        }
+
+        /* Приветственный баннер */
+        .jumbotron {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            transition: background 0.3s ease;
+        }
+
+        body.dark-theme .jumbotron {
+            background: linear-gradient(to right, #333333, #444444);
+        }
+
+        /* Карточки */
+        .card {
+            background-color: #ffffff;
+            color: #000000;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme .card {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+        }
+
+        /* Кнопки */
+        .btn {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-outline-primary {
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+        body.dark-theme .btn-outline-primary {
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        body.dark-theme .btn-outline-primary:hover {
+            background-color: #ffffff;
+            color: #121212;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        body.dark-theme .btn-primary {
+            background-color: #ffffff;
+            color: #121212;
+            border-color: #ffffff;
+        }
+
+        body.dark-theme .btn-primary:hover {
+            background-color: #e0e0e0;
+            color: #121212;
+        }
+
+        /* Раздел "О нас" */
+        .bg-light {
+            background-color: #f8f9fa !important;
+            transition: background-color 0.3s ease;
+        }
+
+        body.dark-theme .bg-light {
+            background-color: #1f1f1f !important;
+        }
+
+        /* Текст в разделе "О нас" */
+        .bg-light .text-dark {
+            color: #000000;
+        }
+
+        body.dark-theme .bg-light .text-dark {
+            color: #e0e0e0;
+        }
+
+        /* Аккордеон FAQ */
+        .card-header {
+            background-color: #f8f9fa;
+            transition: background-color 0.3s ease;
+        }
+
+        body.dark-theme .card-header {
+            background-color: #1f1f1f;
+        }
+
+        .card-body {
+            background-color: #ffffff;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme .card-body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Футер */
+        footer {
+            background-color: #343a40;
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+
+        body.dark-theme footer {
+            background-color: #1f1f1f;
+        }
+
+        /* Социальные ссылки */
+        .social-links a {
+            color: #ffffff;
+        }
+
+        body.dark-theme .social-links a {
+            color: #e0e0e0;
+        }
+
+        /* Иконки */
+        .icon i {
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .icon i {
+            color: #ffffff;
+        }
+
+        /* Ссылки */
+        a {
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme a {
+            color: #80bdff;
+        }
